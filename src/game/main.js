@@ -1,23 +1,25 @@
-const WebGL = require('engine/WebGL');
-const VertexBuffer = require('engine/VertexBuffer');
-const ShaderSupport = require('engine/ShaderSupport');
+const core = require('engine/core');
 
-const SimpleVS = require('./VertexShader.vert');
-const SimpleFS = require('./FragmentShader.frag');
+const Gfx = require('engine/Gfx');
+const Shader = require('engine/Gfx/Shader');
 
-document.addEventListener('DOMContentLoaded', () => {
+const SimpleVS = require('./shaders/Simple.vert');
+const SimpleFS = require('./shaders/Simple.frag');
 
-  const gl = WebGL.initializeGL();
+class WebGL2DGame {
+  constructor() {
+    // Initialize
+    const gl = Gfx.gl;
+    const shader = new Shader(gl, SimpleVS, SimpleFS);
 
-  VertexBuffer.initSquareBuffer();
-  ShaderSupport.initSimpleShader(SimpleVS, SimpleFS);
+    // Draw something
+    Gfx.Clear([0.0, 0.8, 0.0, 1.0]);
 
-  gl.clear(gl.COLOR_BUFFER_BIT);
+    shader.Activate();
 
-  gl.useProgram(ShaderSupport.simpleShader);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-  gl.enableVertexAttribArray(ShaderSupport.shaderVertexPositionAttribute);
+  }
+}
 
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-}, false);
+core.main('#game', WebGL2DGame, 640, 480);

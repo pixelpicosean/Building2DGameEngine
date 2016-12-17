@@ -1,10 +1,10 @@
-const WebGL = require('engine/WebGL');
-
 const VertexBuffer = {
-  squareVertexBuffer: null,
+  Initialize: function(gl) {
+    //
+    // Properties
+    //
+    this.GLVertexRef = null;
 
-  initSquareBuffer: function() {
-    const gl = WebGL.gl;
 
     const vertices = [
       +0.5, +0.5, 0.0,
@@ -14,10 +14,10 @@ const VertexBuffer = {
     ];
 
     // Step A: Create a buffer for our vertex positions
-    this.squareVertexBuffer = gl.createBuffer();
+    this.GLVertexRef = gl.createBuffer();
 
     // Step B: Activate vertexBuffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.GLVertexRef);
 
     // Step C: Load vertices into the vertexBuffer
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
