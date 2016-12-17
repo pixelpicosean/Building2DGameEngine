@@ -20,31 +20,35 @@ class Shader {
     this.gl = gl;
 
     this.Program = null;
+
+    // Attributes
     this.VertexPositionAttribute = null;
+    this.PixelColor = null;
 
 
-    // Compile vertex and fragment shaders
+    // 1. Compile vertex and fragment shaders
     const vs = compile(gl, vertSource, gl.VERTEX_SHADER);
     const fs = compile(gl, fragSource, gl.FRAGMENT_SHADER);
 
-    // Create and link them into a program
+    // 2. Create and link them into a program
     this.Program = gl.createProgram();
     gl.attachShader(this.Program, vs);
     gl.attachShader(this.Program, fs);
     gl.linkProgram(this.Program);
 
-    // Check
+    // 3. Check
     if (!gl.getProgramParameter(this.Program, gl.LINK_STATUS)) {
       console.error(`Error linking shader`);
     }
 
-    // Get a reference to the `aSquareVertexPosition` attribute
-    this.VertexPositionAttribute = gl.getAttribLocation(this.Program, 'aSquareVertexPosition');
+    // 4. Get a reference to the attributes
+    this.VertexPositionAttribute = gl.getAttribLocation(this.Program, 'aVertexPosition');
+    this.PixelColor = gl.getUniformLocation(this.Program, 'uPixelColor');
 
-    // Activates the vertex buffer
+    // 5. Activates the vertex buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, VertexBuffer.GLVertexRef);
 
-    // Describe the characteristic of the vertex position attribute
+    // 6. Describe the characteristic of the vertex position attribute
     gl.vertexAttribPointer(
       this.VertexPositionAttribute,
       3,          // each vertex element is a 3-float (x, y, z)
@@ -55,11 +59,12 @@ class Shader {
     );
   }
 
-  Activate() {
+  Activate(pixelColor) {
     const gl = this.gl;
 
     gl.useProgram(this.Program);
     gl.enableVertexAttribArray(this.VertexPositionAttribute);
+    gl.uniform4fv(this.PixelColor, pixelColor);
 
     return this;
   }

@@ -13,9 +13,9 @@ class WebGL2DGame {
     const shader = new Shader(gl, SimpleVS, SimpleFS);
 
     // Draw something
-    Gfx.Clear([0.0, 0.8, 0.0, 1.0]);
+    Gfx.Clear([0.2, 0.6, 0.4, 1.0]);
 
-    shader.Activate();
+    shader.Activate([0.6, 0.3, 0.4, 1.0]);
 
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
