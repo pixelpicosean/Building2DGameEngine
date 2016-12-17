@@ -1,4 +1,4 @@
-const Gfx = require('engine/Gfx');
+const gfx = require('engine/gfx');
 
 const querySelector = (selector) =>
   selector.charAt(0) === '#' ?
@@ -6,22 +6,22 @@ const querySelector = (selector) =>
     document.getElementsByTagName(selector);
 
 const core = {
-  Game: null,
+  game: null,
 
-  Width: 0,
-  Height: 0,
+  width: 0,
+  height: 0,
 
   main: function(canvasID, GameClass, width, height) {
     document.addEventListener('DOMContentLoaded', () => {
       // Initialize Gfx
       const canvas = querySelector(canvasID);
-      canvas.width = this.Width = width;
-      canvas.height = this.Height = height;
+      canvas.width = this.width = width;
+      canvas.height = this.height = height;
 
-      Gfx.InitializeWebGL(canvas);
+      gfx.initialize(canvas);
 
       // Start the game
-      this.Game = new GameClass();
+      this.game = new GameClass();
     });
   },
 };
