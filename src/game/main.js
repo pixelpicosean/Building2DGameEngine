@@ -21,28 +21,95 @@ class WebGL2DGame {
     const t = mat4.create();
 
     // Create objects
-    const whiteBox = new Renderable(shader);
-    whiteBox.color = [1, 1, 1, 1];
+    const blueBox = new Renderable(shader);
+    blueBox.color = [0.25, 0.25, 0.95, 1.0];
 
     const redBox = new Renderable(shader);
-    redBox.color = [1, 0, 0, 1];
+    redBox.color = [1.0, 0.25, 0.25, 1.0];
 
-    // Draw something
-    gfx.clear([0.2, 0.6, 0.4, 1.0]);
+    const tlBox = new Renderable(shader);
+    tlBox.color = [0.9, 0.1, 0.1, 1.0];
+    const trBox = new Renderable(shader);
+    trBox.color = [0.1, 0.9, 0.1, 1.0];
+    const brBox = new Renderable(shader);
+    brBox.color = [0.1, 0.1, 0.9, 1.0];
+    const blBox = new Renderable(shader);
+    blBox.color = [0.1, 0.1, 0.1, 1.0];
 
-    whiteBox.x = -0.25;
-    whiteBox.y = +0.25;
-    whiteBox.rotation = 0.2;
-    whiteBox.scaleX = 1.2;
-    whiteBox.scaleY = 1.2;
-    whiteBox.draw(gl, t);
+    // Draw
+    gfx.clear([0.9, 0.9, 0.9, 1.0]);
 
-    redBox.x = +0.25;
-    redBox.y = -0.25;
-    redBox.rotation = -0.785;
-    redBox.scaleX = 0.4;
-    redBox.scaleY = 0.4;
-    redBox.draw(gl, t);
+    gl.viewport(
+      20,     // x position of bottom-left corner
+      40,     // y position of bottom-left corner
+      600,    // width of the area
+      300     // height of the area
+    );
+    gl.scissor(
+      20,
+      40,
+      600,
+      300
+    );
+
+    gl.enable(gl.SCISSOR_TEST);
+      gfx.clear([0.8, 0.8, 0.8, 1.0]);
+    gl.disable(gl.SCISSOR_TEST);
+
+    const viewMatrix = mat4.create();
+    mat4.lookAt(viewMatrix,
+      [20, 60, 10],     // camera position
+      [20, 60, 0],      // look at position
+      [0, 1, 0]         // orientation
+    );
+
+    const projMatrix = mat4.create();
+    mat4.ortho(projMatrix,
+      -10,    // left
+      10,     // right
+      -5,     // bottom
+      5,      // top
+      0,      // near
+      1000    // far
+    );
+
+    const vpMatrix = mat4.create();
+    mat4.multiply(vpMatrix, projMatrix, viewMatrix);
+
+    // - center blue
+    blueBox.x = 20;
+    blueBox.y = 60;
+    blueBox.rotation = 0.2;
+    blueBox.scaleX = 5;
+    blueBox.scaleY = 5;
+    blueBox.draw(gl, vpMatrix);
+
+    // - center red
+    redBox.x = 20;
+    redBox.y = 60;
+    redBox.scaleX = 2;
+    redBox.scaleY = 2;
+    redBox.draw(gl, vpMatrix);
+
+    // - top left
+    tlBox.x = 10;
+    tlBox.y = 65;
+    tlBox.draw(gl, vpMatrix);
+
+    // - top right
+    trBox.x = 30;
+    trBox.y = 65;
+    trBox.draw(gl, vpMatrix);
+
+    // - bottom right
+    brBox.x = 30;
+    brBox.y = 55;
+    brBox.draw(gl, vpMatrix);
+
+    // - bottom left
+    blBox.x = 10;
+    blBox.y = 55;
+    blBox.draw(gl, vpMatrix);
   }
 }
 

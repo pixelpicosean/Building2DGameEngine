@@ -22,8 +22,8 @@ class Transform {
     this._sin = Math.sin(v);
 
     this.matrix[0] = this._cos * this._scaleX;
-    this.matrix[1] = this._sin;
-    this.matrix[4] = -this._sin;
+    this.matrix[1] = this._sin * this._scaleX;
+    this.matrix[4] = -this._sin * this._scaleY;
     this.matrix[5] = this._cos * this._scaleY;
   }
   get scaleX() {
@@ -32,12 +32,14 @@ class Transform {
   set scaleX(v) {
     this._scaleX = v;
     this.matrix[0] = this._cos * this._scaleX;
+    this.matrix[1] = this._sin * this._scaleX;
   }
   get scaleY() {
     return this._scaleY;
   }
   set scaleY(v) {
     this._scaleY = v;
+    this.matrix[4] = -this._sin * this._scaleY;
     this.matrix[5] = this._cos * this._scaleY;
   }
 

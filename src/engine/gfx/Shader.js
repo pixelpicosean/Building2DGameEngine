@@ -22,7 +22,7 @@ class Shader {
     this.program = null;
 
     // Attributes
-    this.uViewTransform = null;
+    this.uViewProjTransform = null;
     this.uModelTransform = null;
     this.aVertexPosition = null;
     this.uPixelColor = null;
@@ -44,7 +44,7 @@ class Shader {
     }
 
     // 4. Get a reference to the attributes
-    this.uViewTransform = gl.getUniformLocation(this.program, 'uViewTransform');
+    this.uViewProjTransform = gl.getUniformLocation(this.program, 'uViewProjTransform');
     this.uModelTransform = gl.getUniformLocation(this.program, 'uModelTransform');
     this.uPixelColor = gl.getUniformLocation(this.program, 'uPixelColor');
     this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
@@ -63,11 +63,11 @@ class Shader {
     );
   }
 
-  activate(pixelColor, viewTransform) {
+  activate(pixelColor, vpTransform) {
     const gl = this.gl;
 
     gl.useProgram(this.program);
-    gl.uniformMatrix4fv(this.uViewTransform, false, viewTransform);
+    gl.uniformMatrix4fv(this.uViewProjTransform, false, vpTransform);
     gl.uniform4fv(this.uPixelColor, pixelColor);
     gl.enableVertexAttribArray(this.aVertexPosition);
 
