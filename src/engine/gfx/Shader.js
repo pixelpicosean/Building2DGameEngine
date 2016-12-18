@@ -22,9 +22,10 @@ class Shader {
     this.program = null;
 
     // Attributes
+    this.uViewTransform = null;
+    this.uModelTransform = null;
     this.aVertexPosition = null;
     this.uPixelColor = null;
-    this.uModelTransform = null;
 
 
     // 1. Compile vertex and fragment shaders
@@ -43,9 +44,10 @@ class Shader {
     }
 
     // 4. Get a reference to the attributes
-    this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
-    this.uPixelColor = gl.getUniformLocation(this.program, 'uPixelColor');
+    this.uViewTransform = gl.getUniformLocation(this.program, 'uViewTransform');
     this.uModelTransform = gl.getUniformLocation(this.program, 'uModelTransform');
+    this.uPixelColor = gl.getUniformLocation(this.program, 'uPixelColor');
+    this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
 
     // 5. Activates the vertex buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, VertexBuffer.buffer);
@@ -61,12 +63,13 @@ class Shader {
     );
   }
 
-  activate(pixelColor) {
+  activate(pixelColor, viewTransform) {
     const gl = this.gl;
 
     gl.useProgram(this.program);
-    gl.enableVertexAttribArray(this.aVertexPosition);
+    gl.uniformMatrix4fv(this.uViewTransform, false, viewTransform);
     gl.uniform4fv(this.uPixelColor, pixelColor);
+    gl.enableVertexAttribArray(this.aVertexPosition);
 
     return this;
   }

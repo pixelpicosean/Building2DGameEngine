@@ -30,15 +30,18 @@ class WebGL2DGame {
     // Draw something
     gfx.clear([0.2, 0.6, 0.4, 1.0]);
 
-    mat4.translate(t, t, vec3.fromValues(-0.25, 0.25, 0.0));
-    mat4.rotateZ(t, t, 0.2);
-    mat4.scale(t, t, vec3.fromValues(1.2, 1.2, 1.0));
+    whiteBox.x = -0.25;
+    whiteBox.y = +0.25;
+    whiteBox.rotation = 0.2;
+    whiteBox.scaleX = 1.2;
+    whiteBox.scaleY = 1.2;
     whiteBox.draw(gl, t);
 
-    mat4.identity(t);
-    mat4.translate(t, t, vec3.fromValues(0.25, -0.25, 0.0));
-    mat4.rotateZ(t, t, -0.785);
-    mat4.scale(t, t, vec3.fromValues(0.4, 0.4, 1.0));
+    redBox.x = +0.25;
+    redBox.y = -0.25;
+    redBox.rotation = -0.785;
+    redBox.scaleX = 0.4;
+    redBox.scaleY = 0.4;
     redBox.draw(gl, t);
   }
 }
