@@ -21,3 +21,7 @@ I'll simply pass the physics and shadow parts.
 - [ ] Chapter 7: camera
 - [ ] Chapter 9: particle
 - [ ] Chapter 10: a complete game
+
+## Credits
+
+`AM2R-04.mp3` from AM2R soundtrack

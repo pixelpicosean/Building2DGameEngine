@@ -1,5 +1,6 @@
 const core = require('engine/core');
 const loader = require('engine/loader');
+const audio = require('engine/audio');
 const Game = require('engine/Game');
 
 const SystemInput = require('engine/input');
@@ -16,6 +17,7 @@ const mat4 = require('engine/gfx/gl-matrix/mat4');
 const vec2 = require('engine/gfx/gl-matrix/vec2');
 
 loader.add('test.json');
+loader.add('AM2R-04.mp3');
 
 class WebGL2DGame extends Game {
   constructor() {
@@ -76,6 +78,8 @@ class WebGL2DGame extends Game {
     super.awake();
 
     console.log(loader.resources['test.json'].data);
+
+    audio.sounds['AM2R-04.mp3'].volume(0.5).play();
   }
   update(dt, sec) {
     super.update(dt, sec);

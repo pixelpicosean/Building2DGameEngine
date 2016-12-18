@@ -5,6 +5,9 @@ module.exports = {
    */
   baseUrl: 'media',
 
+  /**
+   * Gfx specific settings.
+   */
   gfx: {
     /**
      * The resolution of the renderer, used for hi-resolution
@@ -36,5 +39,17 @@ module.exports = {
      * @type {Boolean}
      */
     antialias: false,
+  },
+
+  /**
+   * Audio specific settings.
+   */
+  audio: {
+    /**
+     * Supported audio file format.
+     * Only files with these extensions will be load.
+     * @type {Array}
+     */
+    use: ['webm', 'mp3'],
   },
 };
