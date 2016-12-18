@@ -10,6 +10,19 @@ class Game {
     this.desiredFPS = 60;
 
     /**
+     * Map of added systems
+     * @property {Object} systems
+     */
+    this.systems = {};
+
+    /**
+     * List of system updating order.
+     * Note: `systemOrder` should only be modified after systems added!
+     * @property {Array<String>} systemOrder
+     */
+    this.systemOrder = [];
+
+    /**
      * List of entities in the game world.
      * @type {Array<Entity>}
      */
@@ -19,6 +32,11 @@ class Game {
      * @type {Object}
      */
     this.namedEntities = {};
+    /**
+     * Holding all the tagged entities(has `tag` been set).
+     * @type {Object}
+     */
+    this.taggedEntities = {};
 
     /**
      * Caches update informations
@@ -37,10 +55,91 @@ class Game {
     };
   }
 
-  awake() {}
-  update() {}
-  draw() {}
-  freeze() {}
+  /**
+   * Awake is called when this scene is activated.
+   * @method awake
+   * @memberof Game#
+   */
+  awake() {
+    let i, sys;
+    for (i = 0; i < this.systemOrder.length; i++) {
+      sys = this.systemOrder[i];
+      this.systems[sys] && this.systems[sys].awake();
+    }
+  }
+
+  /**
+   * Fixed update is called in a constant frenquence decided by `desiredFPS`.
+   * @method update
+   * @memberof Game#
+   * @param {Number} delta    Delta time in millisecond
+   * @param {Number} deltaSec Delta time in second
+   */
+  update(delta, deltaSec) {
+    let i, sys, ent;
+
+    // Update systems
+    for (i = 0; i < this.systemOrder.length; i++) {
+      sys = this.systemOrder[i];
+      this.systems[sys] && this.systems[sys].update(delta, deltaSec);
+    }
+  }
+
+  /**
+   * Drawing method
+   * @method draw
+   * @memberof Game#
+   * @param {Number} delta    Delta time in millisecond
+   * @param {Number} deltaSec Delta time in second
+   */
+  draw(delta, deltaSec) {
+    let i, sys, ent;
+
+    // Update systems
+    for (i = 0; i < this.systemOrder.length; i++) {
+      sys = this.systemOrder[i];
+      this.systems[sys] && this.systems[sys].draw(delta, deltaSec);
+    }
+  }
+
+  /**
+   * Freeze is called when this scene is deactivated(switched to another one)
+   * @method freeze
+   * @memberof Game#
+   */
+  freeze() {
+    let i, sys;
+    for (i = 0; i < this.systemOrder.length; i++) {
+      sys = this.systemOrder[i];
+      this.systems[sys] && this.systems[sys].freeze();
+    }
+  }
+
+  /**
+   * Add a system instance to this game.
+   * @method addSystem
+   * @memberof Game#
+   * @param {System} sys System instance to add
+   * @return {Game} Self for chaining
+   */
+  addSystem(sys) {
+    if (sys.name.length === 0) {
+      console.log(`System name "${sys.name}" is invalid!`);
+      return this;
+    }
+
+    if (this.systemOrder.indexOf(sys.name) >= 0) {
+      console.log(`System "${sys.name}" already added!`);
+      return this;
+    }
+
+    this.systems[sys.name] = sys;
+    this.systemOrder.push(sys.name);
+    this[`sys${sys.name}`] = sys;
+    sys.game = this;
+
+    return this;
+  }
 
   run(timestamp) {
     let updateInfo = this.updateInfo;

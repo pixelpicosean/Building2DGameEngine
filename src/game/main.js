@@ -1,6 +1,8 @@
 const core = require('engine/core');
 const Game = require('engine/Game');
 
+const SystemInput = require('engine/input');
+
 const gfx = require('engine/gfx');
 const Shader = require('engine/gfx/Shader');
 const Renderable = require('engine/gfx/Renderable');
@@ -15,6 +17,12 @@ const vec2 = require('engine/gfx/gl-matrix/vec2');
 class WebGL2DGame extends Game {
   constructor() {
     super();
+
+    this.addSystem(new SystemInput);
+
+    this.sysInput
+      .bind('LEFT', 'left')
+      .bind('RIGHT', 'right')
 
     // Initialize
     const gl = gfx.gl;
@@ -61,10 +69,21 @@ class WebGL2DGame extends Game {
     this.blBox.x = 10;
     this.blBox.y = 55;
   }
-  update(_, dt) {
-    this.blueBox.rotation += dt;
+  update(dt, sec) {
+    super.update(dt, sec);
+
+    this.blueBox.rotation += sec;
+
+    if (this.sysInput.state('left')) {
+      this.blueBox.x -= sec * 10;
+    }
+    else if (this.sysInput.state('right')) {
+      this.blueBox.x += sec * 10;
+    }
   }
-  draw() {
+  draw(dt, sec) {
+    super.draw(dt, sec);
+
     const gl = gfx.gl;
 
     gfx.clear([0.9, 0.9, 0.9, 1.0]);
