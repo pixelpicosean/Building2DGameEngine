@@ -1,4 +1,5 @@
 const core = require('engine/core');
+const Game = require('engine/Game');
 
 const gfx = require('engine/gfx');
 const Shader = require('engine/gfx/Shader');
@@ -11,14 +12,16 @@ const SimpleFS = require('./shaders/Simple.frag');
 const mat4 = require('engine/gfx/gl-matrix/mat4');
 const vec2 = require('engine/gfx/gl-matrix/vec2');
 
-class WebGL2DGame {
+class WebGL2DGame extends Game {
   constructor() {
+    super();
+
     // Initialize
     const gl = gfx.gl;
     const shader = new Shader(gl, SimpleVS, SimpleFS);
 
     // Create a camera
-    const camera = new Camera(
+    this.camera = new Camera(
       gl,
       vec2.fromValues(20, 60),  // Center
       20,                       // Width of the world
@@ -26,61 +29,56 @@ class WebGL2DGame {
     );
 
     // Create objects
-    const blueBox = new Renderable(shader);
-    blueBox.color = [0.25, 0.25, 0.95, 1.0];
+    this.blueBox = new Renderable(shader);
+    this.blueBox.color = [0.25, 0.25, 0.95, 1.0];
+    this.blueBox.x = 20;
+    this.blueBox.y = 60;
+    this.blueBox.rotation = 0.2;
+    this.blueBox.scaleX = 5;
+    this.blueBox.scaleY = 5;
 
-    const redBox = new Renderable(shader);
-    redBox.color = [1.0, 0.25, 0.25, 1.0];
+    this.redBox = new Renderable(shader);
+    this.redBox.color = [1.0, 0.25, 0.25, 1.0];
+    this.redBox.x = 20;
+    this.redBox.y = 60;
+    this.redBox.scaleX = 2;
+    this.redBox.scaleY = 2;
 
-    const tlBox = new Renderable(shader);
-    tlBox.color = [0.9, 0.1, 0.1, 1.0];
-    const trBox = new Renderable(shader);
-    trBox.color = [0.1, 0.9, 0.1, 1.0];
-    const brBox = new Renderable(shader);
-    brBox.color = [0.1, 0.1, 0.9, 1.0];
-    const blBox = new Renderable(shader);
-    blBox.color = [0.1, 0.1, 0.1, 1.0];
+    this.tlBox = new Renderable(shader);
+    this.tlBox.color = [0.9, 0.1, 0.1, 1.0];
+    this.tlBox.x = 10;
+    this.tlBox.y = 65;
+    this.trBox = new Renderable(shader);
+    this.trBox.color = [0.1, 0.9, 0.1, 1.0];
+    this.trBox.x = 30;
+    this.trBox.y = 65;
+    this.brBox = new Renderable(shader);
+    this.brBox.color = [0.1, 0.1, 0.9, 1.0];
+    this.brBox.x = 30;
+    this.brBox.y = 55;
+    this.blBox = new Renderable(shader);
+    this.blBox.color = [0.1, 0.1, 0.1, 1.0];
+    this.blBox.x = 10;
+    this.blBox.y = 55;
+  }
+  update(_, dt) {
+    this.blueBox.rotation += dt;
+  }
+  draw() {
+    const gl = gfx.gl;
 
-    // Draw
     gfx.clear([0.9, 0.9, 0.9, 1.0]);
 
-    camera.setupViewProjection();
-    const vpMatrix = camera.vpMatrix;
+    this.camera.setupViewProjection();
+    const vpMatrix = this.camera.vpMatrix;
 
-    // - center blue
-    blueBox.x = 20;
-    blueBox.y = 60;
-    blueBox.rotation = 0.2;
-    blueBox.scaleX = 5;
-    blueBox.scaleY = 5;
-    blueBox.draw(gl, vpMatrix);
+    this.blueBox.draw(gl, vpMatrix);
+    this.redBox.draw(gl, vpMatrix);
 
-    // - center red
-    redBox.x = 20;
-    redBox.y = 60;
-    redBox.scaleX = 2;
-    redBox.scaleY = 2;
-    redBox.draw(gl, vpMatrix);
-
-    // - top left
-    tlBox.x = 10;
-    tlBox.y = 65;
-    tlBox.draw(gl, vpMatrix);
-
-    // - top right
-    trBox.x = 30;
-    trBox.y = 65;
-    trBox.draw(gl, vpMatrix);
-
-    // - bottom right
-    brBox.x = 30;
-    brBox.y = 55;
-    brBox.draw(gl, vpMatrix);
-
-    // - bottom left
-    blBox.x = 10;
-    blBox.y = 55;
-    blBox.draw(gl, vpMatrix);
+    this.tlBox.draw(gl, vpMatrix);
+    this.trBox.draw(gl, vpMatrix);
+    this.brBox.draw(gl, vpMatrix);
+    this.blBox.draw(gl, vpMatrix);
   }
 }
 
