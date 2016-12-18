@@ -1,19 +1,29 @@
 const VertexBuffer = require('./VertexBuffer');
 
+const loader = require('engine/loader');
+const textureParser = require('./loaders/textureParser');
+
 module.exports = {
   initialize: function(canvas) {
     //
     // Properties
     //
-    this.gl = canvas.getContext('webgl');
+    const gl = this.gl = canvas.getContext('webgl');
 
 
-    if (!this.gl) {
+    if (!gl) {
       console.error('WebGL is not supported!');
       return;
     }
 
-    VertexBuffer.initialize(this.gl);
+    // Allows transparency with textures
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.BLEND);
+
+    VertexBuffer.initialize(gl);
+
+    // Use loader middlewares
+    loader.use(textureParser(gl));
 
     return this;
   },

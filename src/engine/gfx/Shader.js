@@ -50,7 +50,7 @@ class Shader {
     this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
 
     // 5. Activates the vertex buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, VertexBuffer.buffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, VertexBuffer.meshBuffer);
 
     // 6. Describe the characteristic of the vertex position attribute
     gl.vertexAttribPointer(

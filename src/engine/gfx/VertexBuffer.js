@@ -3,7 +3,8 @@ const VertexBuffer = {
     //
     // Properties
     //
-    this.buffer = null;
+    this.meshBuffer = null;
+    this.texCoordBuffer = null;
 
 
     const vertices = [
@@ -13,14 +14,30 @@ const VertexBuffer = {
       -0.5, -0.5, 0.0,
     ];
 
+    const texCoords = [
+      1.0, 1.0,
+      0.0, 1.0,
+      1.0, 0.0,
+      0.0, 0.0,
+    ];
+
     // Step A: Create a buffer for our vertex positions
-    this.buffer = gl.createBuffer();
+    this.meshBuffer = gl.createBuffer();
 
-    // Step B: Activate vertexBuffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+    // - Activate vertexBuffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.meshBuffer);
 
-    // Step C: Load vertices into the vertexBuffer
+    // - Load vertices into the vertexBuffer
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+    // Step B: Create a buffer for texture coordinates
+    this.texCoordBuffer = gl.createBuffer();
+
+    // Activate texCoordBuffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
+
+    // Load texture coordinates
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW);
   },
 };
 
