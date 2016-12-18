@@ -2,14 +2,14 @@ const core = require('engine/core');
 
 const gfx = require('engine/gfx');
 const Shader = require('engine/gfx/Shader');
-
 const Renderable = require('engine/gfx/Renderable');
+const Camera = require('engine/gfx/Camera');
 
 const SimpleVS = require('./shaders/Simple.vert');
 const SimpleFS = require('./shaders/Simple.frag');
 
 const mat4 = require('engine/gfx/gl-matrix/mat4');
-const vec3 = require('engine/gfx/gl-matrix/vec3');
+const vec2 = require('engine/gfx/gl-matrix/vec2');
 
 class WebGL2DGame {
   constructor() {
@@ -17,8 +17,13 @@ class WebGL2DGame {
     const gl = gfx.gl;
     const shader = new Shader(gl, SimpleVS, SimpleFS);
 
-    // Create a transform for drawing
-    const t = mat4.create();
+    // Create a camera
+    const camera = new Camera(
+      gl,
+      vec2.fromValues(20, 60),  // Center
+      20,                       // Width of the world
+      [20, 40, 600, 300]        // Viewport
+    );
 
     // Create objects
     const blueBox = new Renderable(shader);
@@ -39,42 +44,8 @@ class WebGL2DGame {
     // Draw
     gfx.clear([0.9, 0.9, 0.9, 1.0]);
 
-    gl.viewport(
-      20,     // x position of bottom-left corner
-      40,     // y position of bottom-left corner
-      600,    // width of the area
-      300     // height of the area
-    );
-    gl.scissor(
-      20,
-      40,
-      600,
-      300
-    );
-
-    gl.enable(gl.SCISSOR_TEST);
-      gfx.clear([0.8, 0.8, 0.8, 1.0]);
-    gl.disable(gl.SCISSOR_TEST);
-
-    const viewMatrix = mat4.create();
-    mat4.lookAt(viewMatrix,
-      [20, 60, 10],     // camera position
-      [20, 60, 0],      // look at position
-      [0, 1, 0]         // orientation
-    );
-
-    const projMatrix = mat4.create();
-    mat4.ortho(projMatrix,
-      -10,    // left
-      10,     // right
-      -5,     // bottom
-      5,      // top
-      0,      // near
-      1000    // far
-    );
-
-    const vpMatrix = mat4.create();
-    mat4.multiply(vpMatrix, projMatrix, viewMatrix);
+    camera.setupViewProjection();
+    const vpMatrix = camera.vpMatrix;
 
     // - center blue
     blueBox.x = 20;
